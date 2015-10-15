@@ -11,7 +11,7 @@ Not required on the client, although may work in single player.
 Minecraft 1.6.4:  
 http://the-beast-unleashed.com/files/ChunkPurge-1.6.4-1.2.jar
 
-Minecraft 1.7.10 Infitech 2:
+Minecraft 1.7.10 Infitech 2:  
 http://minecraft.curseforge.com/projects/chunkpurge-for-1-7-10-infitech-2
 
 Description
