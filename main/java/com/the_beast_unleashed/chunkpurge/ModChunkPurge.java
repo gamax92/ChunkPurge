@@ -11,13 +11,13 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = ModChunkPurge.MODID, name = ModChunkPurge.NAME, version = ModChunkPurge.VERSION)
+@Mod(modid = ModChunkPurge.MODID, name = ModChunkPurge.NAME, version = ModChunkPurge.VERSION, acceptableRemoteVersions = "*")
 public class ModChunkPurge
 {
 
 	public static final String MODID = "ChunkPurge";
 	public static final String NAME = "Chunk Purge";
-	public static final String VERSION = "2.0";
+	public static final String VERSION = "2.1";
 
 	@Instance(MODID)
 	public static ModChunkPurge instance;
