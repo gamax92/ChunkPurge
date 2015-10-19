@@ -17,6 +17,8 @@ public class ModChunkPurge
 
 	public static final String MODID = "ChunkPurge";
 	public static final String NAME = "Chunk Purge";
+	// This has to be changed each time the jar is updated to a new version
+	// it seems like there could be an easier way to do this.
 	public static final String VERSION = "2.1";
 
 	@Instance(MODID)

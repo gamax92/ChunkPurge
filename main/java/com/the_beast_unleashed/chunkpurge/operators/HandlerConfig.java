@@ -5,6 +5,8 @@ import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 
+import cpw.mods.fml.client.config.GuiConfig;
+
 public class HandlerConfig
 {
 	
@@ -12,9 +14,12 @@ public class HandlerConfig
 	private Properties properties;
 	
 	public int chunkUnloadDelay;
-	public String commandChunkPurge;
 	public boolean enabled;
 	public boolean debug;
+	public int pradius;
+	public int tradius;
+	public int sradius;
+	public String dimlist;
 	
 	public HandlerConfig(File configurationFile)
 	{
@@ -31,7 +36,7 @@ public class HandlerConfig
 		enabled = properties.enabled.getBoolean(true);
 		
 		properties.chunkUnloadDelay = config.get(Configuration.CATEGORY_GENERAL, "chunkUnloadDelay", 600,
-				"The number of ticks to wait between chunk unloading attempts. 0 to disable."
+				"The number of ticks to wait between chunk unloading attempts. Must be an integer greater than 0."
 				+ "\nChange in game with /chunkpurge delay <ticks>"
 				+ "\nDefault: 600");
 		
@@ -44,28 +49,51 @@ public class HandlerConfig
 		
 		debug = properties.debug.getBoolean(false);
 		
-		commandChunkPurge = config.get(Configuration.CATEGORY_GENERAL, "commandChunkPurge", "chunkpurge",
-				"Which command to register for in game configuration."
-				+ "\nDefault: chunkpurge").getString();
+		properties.pradius = config.get(Configuration.CATEGORY_GENERAL, "praduius", 4,
+				"The number of chunks around a player outside of player view range to ignore while unloading chunks."
+				+ "\nChange in game with /chunkpurge pradius <# of chunks>"
+				+ "\nDefault: 4");
+		
+		pradius = properties.pradius.getInt(5);
+		
+		properties.tradius = config.get(Configuration.CATEGORY_GENERAL, "traduius", 5,
+				"The number of chunks around a forced chunk ticket to ignore while unloading chunks."
+				+ "\nChange in game with /chunkpurge tradius <# of chunks>"
+				+ "\nDefault: 5");
+		
+		tradius = properties.tradius.getInt(3);
+		
+		properties.sradius = config.get(Configuration.CATEGORY_GENERAL, "sraduius", 3,
+				"The number of chunks around the spawn chunks to ignore while unloading chunks."
+				+ "\nChange in game with /chunkpurge tradius <# of chunks>"
+				+ "\nDefault: 3");
+		
+		sradius = properties.sradius.getInt(4);
+		
+		properties.dimlist = config.get(Configuration.CATEGORY_GENERAL, "dimlist", "0",
+				"A comma seperated list of dimension ID's that ChunkPurge should quarry and purge"
+				+ "\nChange in game with /chunkpurge dimlist add OR /chunkpurge dimlist remove <dim #,dim #,ect.>"
+				+ "\nExample for running ChunkPurge on Overworld, Nether, and End (0,-1,1)"
+				+ "\nDefault is Overworld Only (you can add any registered dimensions from any mod)"
+				+ "\nDefault: 0");
+		
+		dimlist = properties.dimlist.getString();
 		
 		config.save();
-		
-		if (chunkUnloadDelay == 0)
-		{
-			
-			chunkUnloadDelay = 600;
-			enabled = false;
-			
-		}
 		
 	}
 	
 	public void saveConfig()
 	{
 		
+		
 		properties.chunkUnloadDelay.set(chunkUnloadDelay);
 		properties.debug.set(debug);
 		properties.enabled.set(enabled);
+		properties.pradius.set(pradius);
+		properties.tradius.set(tradius);
+		properties.sradius.set(sradius);
+		properties.dimlist.set(dimlist);
 		config.save();
 		
 	}
@@ -77,6 +105,10 @@ public class HandlerConfig
 		Property chunkUnloadDelay;
 		Property enabled;
 		Property debug;
+		Property pradius;
+		Property tradius;
+		Property sradius;
+		Property dimlist;
 		
 	}
 	

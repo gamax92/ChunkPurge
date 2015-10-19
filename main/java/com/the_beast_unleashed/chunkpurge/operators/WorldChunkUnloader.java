@@ -122,7 +122,7 @@ public class WorldChunkUnloader
 	 * which do NOT link back to a valid chunk watcher, and unload those. 
 	 * 
 	 * This is a better alternative to simply unloading all chunks outside of a player's view radius.
-	 * Unloading chunks while not unloading their neighbours would result in tps-spikes due to the breaking
+	 * Unloading chunks while not unloading their neighbors would result in tps-spikes due to the breaking
 	 * of energy nets and the like. This approach should reduce the severity of those tps-spikes.
 	 * 
 	 * ChunkProviderServer.loadedChunks is a private field, so an access transformer is required to access it. 
@@ -153,13 +153,16 @@ public class WorldChunkUnloader
 			// The expected radius of loaded chunks around a player
 			final int PLAYER_RADIUS = MinecraftServer.getServer().getConfigurationManager().getViewDistance();
 			// The expected radius of loaded chunks around a chunk-loading ticket
-			final int TICKET_RADIUS = 1;
+			final int TICKET_RADIUS = 0;
 			// The expected radius of loaded chunks around the spawn chunk.
 			final int SPAWN_RADIUS = 8;
 			
-			// Multiply our above expectations by this factor, and prevent the flood filling algorithm from returning
+			// Add these values to our above expectations to prevent the flood filling algorithm from returning
 			// chunks outside of the resulting radius.
-			final double LIMIT_FACTOR = 1.5;
+			// Each is separate so you can configure them independently
+			int PLAYER_LIMIT = ModChunkPurge.config.pradius;
+			int TICKET_LIMIT = ModChunkPurge.config.tradius;
+			int SPAWN_LIMIT = ModChunkPurge.config.sradius;
 			
 			
 			// Want to deal with chunk coordinates, not chunk objects.
@@ -170,7 +173,7 @@ public class WorldChunkUnloader
 				
 			}
 			
-			radiusLimit = (int) Math.ceil(PLAYER_RADIUS * LIMIT_FACTOR);
+			radiusLimit = (int) Math.ceil(PLAYER_RADIUS + PLAYER_LIMIT);
 			
 			for (EntityPlayerMP player : listPlayers)
 			{
@@ -185,7 +188,7 @@ public class WorldChunkUnloader
 				
 			}
 			
-			radiusLimit = (int) Math.ceil(TICKET_RADIUS * LIMIT_FACTOR);
+			radiusLimit = (int) Math.ceil(TICKET_RADIUS + TICKET_LIMIT);
 			
 			for (ChunkCoordIntPair coord : world.getPersistentChunks().keySet())
 			{
@@ -194,7 +197,7 @@ public class WorldChunkUnloader
 				
 			}
 			
-			radiusLimit = (int) Math.ceil(SPAWN_RADIUS * LIMIT_FACTOR);
+			radiusLimit = (int) Math.ceil(SPAWN_RADIUS + SPAWN_LIMIT);
 			
 			if (world.provider.canRespawnHere() && DimensionManager.shouldLoadSpawn(world.provider.dimensionId))
 			{
@@ -226,9 +229,10 @@ public class WorldChunkUnloader
 	}
 	
 	/*
-	 * Analyse the chunks that are currently loaded in this world. Select loaded chunks that are isolated from any chunk watchers, 
+	 * Analyze the chunks that are currently loaded in this world. Select loaded chunks that are isolated from any chunk watchers, 
 	 * and queue these isolated chunks for unloading.
 	 */
+	
 	public void unloadChunks()
 	{
 		initialTime = MinecraftServer.getSystemTimeMillis();
@@ -242,14 +246,12 @@ public class WorldChunkUnloader
 			{
 				
 				((ChunkProviderServer) this.world.getChunkProvider()).unloadChunksIfNotNearSpawn(coord.chunkXPos, coord.chunkZPos);
-				
 			}
 			
 		}
 		
 		if (ModChunkPurge.config.debug)
 		{
-
 			ModChunkPurge.log.log(Level.INFO, "Queued " + String.valueOf(chunksToUnload.size())
 					+ " chunks for unload in dimension " + this.world.provider.getDimensionName()
 					+ " (" + String.valueOf(this.world.provider.dimensionId)
