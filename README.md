@@ -81,7 +81,7 @@ Any number of dimID's can be added at one time in a comma seperated list with NO
 ```
 /chunkpurge dimlist remove [DimID,DimID,ect.]
 ```
-Removes dimension ID's to be checked by ChunkPurge for unload. The the config is set to check Overworld, Nether, and End, using /chunkpurge dimlist remove -1,1 would set the Nether and End to no longer be checked.
+Removes dimension ID's to be checked by ChunkPurge for unload. If the the config is set to check Overworld, Nether, and End, using /chunkpurge dimlist remove -1,1 would set the Nether and End to no longer be checked.
 Any number of dimID's can be removed at one time in a comma seperated list with NO spaces.
 
 
