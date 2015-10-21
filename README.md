@@ -27,7 +27,7 @@ Commands
 These configuration options can also be edited in ChunkPurge.cfg. For all commands omit the parameter to view the current setting.
 
 ```
-/chunkpurge chunkUnloadDelay [ticks]
+/chunkpurge delay [ticks]
 ```
 The number of ticks to wait between chunk unloading attempts.
 Default: 600
