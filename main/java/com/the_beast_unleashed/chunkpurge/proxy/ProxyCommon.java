@@ -5,11 +5,11 @@ import com.the_beast_unleashed.chunkpurge.ModChunkPurge;
 import com.the_beast_unleashed.chunkpurge.commands.CommandChunkPurge;
 import com.the_beast_unleashed.chunkpurge.events.HandlerWorldTick;
 import com.the_beast_unleashed.chunkpurge.operators.HandlerConfig;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class ProxyCommon
 {
