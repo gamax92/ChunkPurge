@@ -5,6 +5,8 @@ import com.the_beast_unleashed.chunkpurge.ModChunkPurge;
 import com.the_beast_unleashed.chunkpurge.commands.CommandChunkPurge;
 import com.the_beast_unleashed.chunkpurge.events.HandlerWorldTick;
 import com.the_beast_unleashed.chunkpurge.operators.HandlerConfig;
+
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -29,7 +31,7 @@ public class ProxyCommon
 	
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		FMLCommonHandler.instance().bus().register(new HandlerWorldTick());
+		MinecraftForge.EVENT_BUS.register(new HandlerWorldTick());
 		
 	}
 	
