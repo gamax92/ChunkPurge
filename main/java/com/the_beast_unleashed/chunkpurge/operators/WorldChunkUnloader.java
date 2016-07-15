@@ -245,8 +245,10 @@ public class WorldChunkUnloader
 			
 			for (ChunkCoordIntPair coord : chunksToUnload)
 			{
-				((ChunkProviderServer) this.world.getChunkProvider()).unloadAllChunks();
-//				((ChunkProviderServer) this.world.getChunkProvider()).unloadChunksIfNotNearSpawn(coord.chunkXPos, coord.chunkZPos);
+				//((ChunkProviderServer) this.world.getChunkProvider()).unloadAllChunks();
+				//in source calling unload all chunks just calls this function anyways so
+				//this is probably what we want
+				((ChunkProviderServer) this.world.getChunkProvider()).dropChunk(coord.chunkXPos, coord.chunkZPos);
 			}
 			
 		}
