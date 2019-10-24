@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 public class ModChunkPurge
 {
 
-	public static final String MODID = "ChunkPurge";
+	public static final String MODID = "chunkpurge";
 	public static final String NAME = "Chunk Purge";
 	// This has to be changed each time the jar is updated to a new version
 	// it seems like there could be an easier way to do this.

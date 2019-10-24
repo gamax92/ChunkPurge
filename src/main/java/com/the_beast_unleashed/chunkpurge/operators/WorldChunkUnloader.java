@@ -9,12 +9,14 @@ import com.the_beast_unleashed.chunkpurge.ModChunkPurge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
 import org.apache.logging.log4j.Level;
 
 /*
@@ -26,7 +28,7 @@ public class WorldChunkUnloader
 {
 	
 	private World world;
-	private HashSet<ChunkCoordIntPair> chunksToUnload;
+	private HashSet<ChunkPos> chunksToUnload;
 	private long initialTime;
 	
 	public WorldChunkUnloader (World world)
@@ -57,11 +59,11 @@ public class WorldChunkUnloader
 	 * 13. Continue looping until Q is exhausted.
 	 * 14. Return
 	 */
-	private HashSet<ChunkCoordIntPair> groupedChunksFinder(HashSet<ChunkCoordIntPair> loadedChunks, ChunkCoordIntPair seed, int radiusLimit)
+	private HashSet<ChunkPos> groupedChunksFinder(HashSet<ChunkPos> loadedChunks, ChunkPos seed, int radiusLimit)
 	{
 		
-		LinkedList<ChunkCoordIntPair> queue = new LinkedList<ChunkCoordIntPair>();
-		HashSet<ChunkCoordIntPair> groupedChunks = new HashSet<ChunkCoordIntPair>();
+		LinkedList<ChunkPos> queue = new LinkedList<ChunkPos>();
+		HashSet<ChunkPos> groupedChunks = new HashSet<ChunkPos>();
 		
 		if (!loadedChunks.contains(seed)) return groupedChunks;
 		queue.add(seed);
@@ -69,40 +71,40 @@ public class WorldChunkUnloader
 		while (!queue.isEmpty())
 		{
 			
-			ChunkCoordIntPair chunk = queue.remove();
+			ChunkPos chunk = queue.remove();
 			
 			if (!groupedChunks.contains(chunk))
 			{
 				int west, east;
 				
-				for (west = chunk.chunkXPos;
-						loadedChunks.contains(new ChunkCoordIntPair(west-1, chunk.chunkZPos))
-								&& (radiusLimit == 0 || Math.abs(west-1 - seed.chunkXPos) <= radiusLimit);
+				for (west = chunk.x;
+						loadedChunks.contains(new ChunkPos(west-1, chunk.z))
+								&& (radiusLimit == 0 || Math.abs(west-1 - seed.x) <= radiusLimit);
 						--west);
 				
-				for (east = chunk.chunkXPos;
-						loadedChunks.contains(new ChunkCoordIntPair(east+1, chunk.chunkZPos))
-								&& (radiusLimit == 0 || Math.abs(east+1 - seed.chunkXPos) <= radiusLimit);
+				for (east = chunk.x;
+						loadedChunks.contains(new ChunkPos(east+1, chunk.z))
+								&& (radiusLimit == 0 || Math.abs(east+1 - seed.x) <= radiusLimit);
 						++east);
 				
 				for (int x = west; x <= east; ++x)
 				{
 					
-					groupedChunks.add(new ChunkCoordIntPair(x, chunk.chunkZPos));
+					groupedChunks.add(new ChunkPos(x, chunk.z));
 					
-					if (loadedChunks.contains(new ChunkCoordIntPair(x, chunk.chunkZPos+1))
-							&& (radiusLimit == 0 || Math.abs(chunk.chunkZPos+1 - seed.chunkZPos) <= radiusLimit))
+					if (loadedChunks.contains(new ChunkPos(x, chunk.z+1))
+							&& (radiusLimit == 0 || Math.abs(chunk.z+1 - seed.z) <= radiusLimit))
 					{
 						
-						queue.add(new ChunkCoordIntPair (x, chunk.chunkZPos+1));
+						queue.add(new ChunkPos (x, chunk.z+1));
 						
 					}
 					
-					if (loadedChunks.contains(new ChunkCoordIntPair(x, chunk.chunkZPos-1))
-							&& (radiusLimit == 0 || Math.abs(chunk.chunkZPos-1 - seed.chunkZPos) <= radiusLimit))
+					if (loadedChunks.contains(new ChunkPos(x, chunk.z-1))
+							&& (radiusLimit == 0 || Math.abs(chunk.z-1 - seed.z) <= radiusLimit))
 					{
 						
-						queue.add(new ChunkCoordIntPair (x, chunk.chunkZPos-1));
+						queue.add(new ChunkPos (x, chunk.z-1));
 						
 					}
 					
@@ -125,25 +127,23 @@ public class WorldChunkUnloader
 	 * This is a better alternative to simply unloading all chunks outside of a player's view radius.
 	 * Unloading chunks while not unloading their neighbors would result in tps-spikes due to the breaking
 	 * of energy nets and the like. This approach should reduce the severity of those tps-spikes.
-	 * 
-	 * ChunkProviderServer.loadedChunks is a private field, so an access transformer is required to access it. 
 	 */
 	private void populateChunksToUnload()
 	{
 		
-		chunksToUnload = new HashSet<ChunkCoordIntPair>();
+		chunksToUnload = new HashSet<>();
 		
 		if (world.getChunkProvider() instanceof ChunkProviderServer)
 		{
 			// The set of chunks that are currently loaded in this world by all mechanisms.
-			HashSet<ChunkCoordIntPair> loadedChunks = new HashSet<ChunkCoordIntPair>();
+			HashSet<ChunkPos> loadedChunks = new HashSet<>();
 			
 			// The set of chunks that are loaded as a result of players.
-			HashSet<ChunkCoordIntPair> playerLoadedChunks = new HashSet<ChunkCoordIntPair>();
+			HashSet<ChunkPos> playerLoadedChunks = new HashSet<>();
 			// The set of chunks that are loaded due to chunk loading tickets.
-			HashSet<ChunkCoordIntPair> forceLoadedChunks = new HashSet<ChunkCoordIntPair>();
+			HashSet<ChunkPos> forceLoadedChunks = new HashSet<>();
 			// The set of chunks that are loaded as a result of the world spawn area.
-			HashSet<ChunkCoordIntPair> spawnLoadedChunks = new HashSet<ChunkCoordIntPair>();
+			HashSet<ChunkPos> spawnLoadedChunks = new HashSet<>();
 			
 			List<EntityPlayer> listPlayers = world.playerEntities;
 			
@@ -152,7 +152,7 @@ public class WorldChunkUnloader
 			final int CHUNK_WIDTH = 16;
 			
 			// The expected radius of loaded chunks around a player
-			final int PLAYER_RADIUS = MinecraftServer.getServer().getConfigurationManager().getViewDistance();
+			final int PLAYER_RADIUS = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getViewDistance();
 			// The expected radius of loaded chunks around a chunk-loading ticket
 			final int TICKET_RADIUS = 0;
 			// The expected radius of loaded chunks around the spawn chunk.
@@ -167,10 +167,10 @@ public class WorldChunkUnloader
 			
 			
 			// Want to deal with chunk coordinates, not chunk objects.
-			for (Chunk chunk : (List<Chunk>) ((ChunkProviderServer) world.getChunkProvider()).loadedChunks)
+			for (Chunk chunk : ((ChunkProviderServer) world.getChunkProvider()).getLoadedChunks())
 			{
 				
-				loadedChunks.add(chunk.getChunkCoordIntPair());
+				loadedChunks.add(chunk.getPos());
 				
 			}
 			
@@ -182,7 +182,7 @@ public class WorldChunkUnloader
 				if (!(player instanceof FakePlayer))
 				{
 					
-					ChunkCoordIntPair playerChunkCoords = new ChunkCoordIntPair(player.chunkCoordX, player.chunkCoordZ);
+					ChunkPos playerChunkCoords = new ChunkPos(player.chunkCoordX, player.chunkCoordZ);
 					playerLoadedChunks.addAll(groupedChunksFinder(loadedChunks, playerChunkCoords, radiusLimit));
 					
 				}
@@ -191,7 +191,7 @@ public class WorldChunkUnloader
 			
 			radiusLimit = (int) Math.ceil(TICKET_RADIUS + TICKET_LIMIT);
 			
-			for (ChunkCoordIntPair coord : world.getPersistentChunks().keySet())
+			for (ChunkPos coord : world.getPersistentChunks().keySet())
 			{
 				
 				forceLoadedChunks.addAll(groupedChunksFinder(loadedChunks, coord, radiusLimit));
@@ -200,18 +200,18 @@ public class WorldChunkUnloader
 			
 			radiusLimit = (int) Math.ceil(SPAWN_RADIUS + SPAWN_LIMIT);
 			
-			if (world.provider.canRespawnHere() && DimensionManager.shouldLoadSpawn(world.provider.getDimensionId()))
+			if (world.provider.canRespawnHere() && world.provider.getDimensionType().shouldLoadSpawn())
 			{
 
-				ChunkCoordIntPair spawnChunkCoords = new ChunkCoordIntPair(
+				ChunkPos spawnChunkCoords = new ChunkPos(
 						(int) Math.floor(world.getSpawnPoint().getX() / CHUNK_WIDTH),
-						(int) Math.floor(world.getSpawnPoint().getY() / CHUNK_WIDTH));
+						(int) Math.floor(world.getSpawnPoint().getZ() / CHUNK_WIDTH));
 				
 				spawnLoadedChunks.addAll(groupedChunksFinder(loadedChunks, spawnChunkCoords, radiusLimit));
 				
 			}
 			
-			for (ChunkCoordIntPair coord : loadedChunks)
+			for (ChunkPos coord : loadedChunks)
 			{
 				
 				if (!playerLoadedChunks.contains(coord)
@@ -242,13 +242,14 @@ public class WorldChunkUnloader
 		
 		if (this.world.getChunkProvider() instanceof ChunkProviderServer)
 		{
+			ChunkProviderServer chunkProviderServer = (ChunkProviderServer) this.world.getChunkProvider();
 			
-			for (ChunkCoordIntPair coord : chunksToUnload)
+			for (ChunkPos coord : chunksToUnload)
 			{
-				//((ChunkProviderServer) this.world.getChunkProvider()).unloadAllChunks();
-				//in source calling unload all chunks just calls this function anyways so
-				//this is probably what we want
-				((ChunkProviderServer) this.world.getChunkProvider()).dropChunk(coord.chunkXPos, coord.chunkZPos);
+				Chunk chunk = chunkProviderServer.getLoadedChunk(coord.x, coord.z);
+				if (chunk != null) {
+					chunkProviderServer.queueUnload(chunk);
+				}
 			}
 			
 		}
@@ -256,11 +257,10 @@ public class WorldChunkUnloader
 		if (ModChunkPurge.config.debug)
 		{
 			ModChunkPurge.log.log(Level.INFO, "Queued " + String.valueOf(chunksToUnload.size())
-					+ " chunks for unload in dimension " + this.world.provider.getDimensionName()
-					+ " (" + String.valueOf(this.world.provider.getDimensionId())
+					+ " chunks for unload in " + this.world.provider.getDimensionType().getName()
+					+ " (" + String.valueOf(this.world.provider.getDimension())
 					+ ") in " + String.valueOf(MinecraftServer.getCurrentTimeMillis() - this.initialTime)
 					+ " milliseconds.");
-			
 		}
 		
 	}

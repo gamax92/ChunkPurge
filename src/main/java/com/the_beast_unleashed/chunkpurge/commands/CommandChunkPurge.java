@@ -10,9 +10,9 @@ import com.the_beast_unleashed.chunkpurge.events.HandlerWorldTick;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 // I attempted to heavily comment this code more than necessary in case anybody
 // in the future wants to edit the code and wonders what the heck I was doing
@@ -20,16 +20,16 @@ import net.minecraft.util.IChatComponent;
 public class CommandChunkPurge extends CommandBase
 {
 	// Use msg to format text to send to the player
-	IChatComponent msg;
+	ITextComponent msg;
 	// Set the mod's command name, used as /commandName [Other cool secondary commands]
   @Override
-  public String getCommandName()
+  public String getName()
   {
     return "chunkpurge";
   }
   // Tell the player what the command does in the /help menu
   @Override
-  public String getCommandUsage(ICommandSender commandUseage)
+  public String getUsage(ICommandSender commandUseage)
   {
     return "/chunkpurge | Get usage help for ChunkPurge";
   }
@@ -38,22 +38,22 @@ public class CommandChunkPurge extends CommandBase
   // If you trigger these methods, you clearly did something wrong.
   private void invalid(ICommandSender commandInvalid)
   {
-	  msg = new ChatComponentText(EnumChatFormatting.RED + "Invalid Argument. Type /chunkpurge for help");
-	  commandInvalid.addChatMessage(msg);
+	  msg = new TextComponentString(TextFormatting.RED + "Invalid Argument. Type /chunkpurge for help");
+	  commandInvalid.sendMessage(msg);
 	  return;  
   }
   private void dimIntInvalid(ICommandSender commandInvalid)
   {
-	  msg = new ChatComponentText(EnumChatFormatting.RED + "Dimensions MUST be an Integer. If more than one, they MUST");
-		commandInvalid.addChatMessage(msg);
-		msg = new ChatComponentText(EnumChatFormatting.RED + "be comma seperated with no spaces");
-		commandInvalid.addChatMessage(msg);
+	  msg = new TextComponentString(TextFormatting.RED + "Dimensions MUST be an Integer. If more than one, they MUST");
+		commandInvalid.sendMessage(msg);
+		msg = new TextComponentString(TextFormatting.RED + "be comma seperated with no spaces");
+		commandInvalid.sendMessage(msg);
 		return;  
   }
   //#####################################################
   // If a command is entered, what should I do?
   @Override
-  public void processCommand(ICommandSender sender, String[] arg)
+  public void execute(MinecraftServer server, ICommandSender sender, String[] arg)
   {
 	List<String> ARList;
 	List<String> configIDs;
@@ -64,26 +64,26 @@ public class CommandChunkPurge extends CommandBase
 	switch (arg.length){
 	// Case 0 (no secondary commands) Lets tell the player how to use the command
 	case 0:
-		msg = new ChatComponentText(EnumChatFormatting.GREEN + "--- Showing Help for ChunkPurge ---");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge delay [ticks]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge debug [true|false]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge enable [true|false]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge pradius [# of chunks]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge tradius [# of chunks]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge sradius [# of chunks]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge dimlist | Lists dimensions that get purged");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge dimlist add [dimID,dimID,ect.]");
-		sender.addChatMessage(msg);
-		msg = new ChatComponentText("/chunkpurge dimlist remove [dimID,dimID,ect.]");
-		sender.addChatMessage(msg);
+		msg = new TextComponentString(TextFormatting.GREEN + "--- Showing Help for ChunkPurge ---");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge delay [ticks]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge debug [true|false]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge enable [true|false]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge pradius [# of chunks]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge tradius [# of chunks]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge sradius [# of chunks]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge dimlist | Lists dimensions that get purged");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge dimlist add [dimID,dimID,ect.]");
+		sender.sendMessage(msg);
+		msg = new TextComponentString("/chunkpurge dimlist remove [dimID,dimID,ect.]");
+		sender.sendMessage(msg);
 		return;
 	// Case 1 (only one secondary command) The player must only want information about a command, not to change it
 	case 1:
@@ -91,55 +91,55 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("delay"))
 			{
 
-				msg = new ChatComponentText(EnumChatFormatting.GREEN + "Unload Delay: " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.chunkUnloadDelay));
-				sender.addChatMessage(msg);
+				msg = new TextComponentString(TextFormatting.GREEN + "Unload Delay: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.chunkUnloadDelay));
+				sender.sendMessage(msg);
 				return;
 			}
 		// If they typed debug, tell them if debug is on or not
 		  if (arg[0].equalsIgnoreCase("debug"))
 			{
 
-				msg = new ChatComponentText(EnumChatFormatting.GREEN + "Debug Mode Enabled: " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.debug));
-				sender.addChatMessage(msg);
+				msg = new TextComponentString(TextFormatting.GREEN + "Debug Mode Enabled: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.debug));
+				sender.sendMessage(msg);
 				return;
 			}
 		// If they typed enable, tell them if the mod is enabled or not 
 		  if (arg[0].equalsIgnoreCase("enable"))
 			{
 
-				msg = new ChatComponentText(EnumChatFormatting.GREEN + "Chunk Purge Enabled: " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.enabled));
-				sender.addChatMessage(msg);
+				msg = new TextComponentString(TextFormatting.GREEN + "Chunk Purge Enabled: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.enabled));
+				sender.sendMessage(msg);
 				return;
 			}
 		// If they typed pradius, give them the added radius to the players view range that will be ignored while unloading chunks
 		  if (arg[0].equalsIgnoreCase("pradius"))
 			{
 
-				msg = new ChatComponentText(EnumChatFormatting.GREEN + "Player Ignore Radius = View Distance(" + MinecraftServer.getServer().getConfigurationManager().getViewDistance()+ ") + " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.pradius) + EnumChatFormatting.GREEN + " Chunks");
-				sender.addChatMessage(msg);
+				msg = new TextComponentString(TextFormatting.GREEN + "Player Ignore Radius = View Distance(" + server.getPlayerList().getViewDistance()+ ") + " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.pradius) + TextFormatting.GREEN + " Chunks");
+				sender.sendMessage(msg);
 				return;
 			}
 		// If they typed tradius, give them the radius around chunk loaders (tickets) that will be ignored while unloading chunks
 		  if (arg[0].equalsIgnoreCase("tradius"))
 			{
 
-				msg = new ChatComponentText(EnumChatFormatting.GREEN + "Chunk Loader Ticket Ignore Radius = " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.tradius) + EnumChatFormatting.GREEN + " Chunks");
-				sender.addChatMessage(msg);
+				msg = new TextComponentString(TextFormatting.GREEN + "Chunk Loader Ticket Ignore Radius = " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.tradius) + TextFormatting.GREEN + " Chunks");
+				sender.sendMessage(msg);
 				return;
 			}
 		 // If they typed sradius, give them the added radius to the Spawn Chunks that will be ignored while unloading chunks
 		  if (arg[0].equalsIgnoreCase("sradius"))
 			{
 
-				msg = new ChatComponentText(EnumChatFormatting.GREEN + "Spawn Chunk Ignore Radius = Spawn Radius(8) + " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.sradius) + EnumChatFormatting.GREEN + " Chunks");
-				sender.addChatMessage(msg);
+				msg = new TextComponentString(TextFormatting.GREEN + "Spawn Chunk Ignore Radius = Spawn Radius(8) + " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.sradius) + TextFormatting.GREEN + " Chunks");
+				sender.sendMessage(msg);
 				return;
 			}
 		  // If they typed dimlist, give them the list of dimensions being processed by ChunkPurge
 		  if (arg[0].equalsIgnoreCase("dimlist"))
 			{
-			  msg = new ChatComponentText(EnumChatFormatting.GREEN + "ID's of dimensions being ChunkPurged | " + EnumChatFormatting.WHITE + ModChunkPurge.config.dimlist.replace(",",", "));
-			  sender.addChatMessage(msg);
+			  msg = new TextComponentString(TextFormatting.GREEN + "ID's of dimensions being ChunkPurged | " + TextFormatting.WHITE + ModChunkPurge.config.dimlist.replace(",",", "));
+			  sender.sendMessage(msg);
 			  return;
 			}
 		  // If none of the above, you did something wrong.
@@ -160,8 +160,8 @@ public class CommandChunkPurge extends CommandBase
 					{
 						
 
-						msg = new ChatComponentText(EnumChatFormatting.RED + "[Ticks] must be an integer greater than 0");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.RED + "[Ticks] must be an integer greater than 0");
+						sender.sendMessage(msg);
 						return;
 					}
 					
@@ -170,8 +170,8 @@ public class CommandChunkPurge extends CommandBase
 						
 						ModChunkPurge.config.chunkUnloadDelay = Integer.valueOf(arg[1]);
 
-						msg = new ChatComponentText(EnumChatFormatting.GREEN + "Chunk Unload Delay Set to: " + EnumChatFormatting.WHITE + arg[1]);
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.GREEN + "Chunk Unload Delay Set to: " + TextFormatting.WHITE + arg[1]);
+						sender.sendMessage(msg);
 						
 						ModChunkPurge.config.saveConfig();
 						return;
@@ -182,8 +182,8 @@ public class CommandChunkPurge extends CommandBase
 				catch (NumberFormatException ex)
 				{
 
-					msg = new ChatComponentText(EnumChatFormatting.RED + "Chunk Unload Delay MUST be an integer. Your input was: " + EnumChatFormatting.WHITE + arg[1]);
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.RED + "Chunk Unload Delay MUST be an integer. Your input was: " + TextFormatting.WHITE + arg[1]);
+					sender.sendMessage(msg);
 					
 				}
 				return;	
@@ -197,8 +197,8 @@ public class CommandChunkPurge extends CommandBase
 					
 					ModChunkPurge.config.debug = Boolean.valueOf(arg[1]);
 
-					msg = new ChatComponentText(EnumChatFormatting.GREEN + "Debug Mode Enabled Set to: " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.debug));
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.GREEN + "Debug Mode Enabled Set to: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.debug));
+					sender.sendMessage(msg);
 					
 					ModChunkPurge.config.saveConfig();
 					return;
@@ -207,8 +207,8 @@ public class CommandChunkPurge extends CommandBase
 				else
 				{
 
-					msg = new ChatComponentText(EnumChatFormatting.RED + "Debug MUST be True or False. Your input was: " + EnumChatFormatting.WHITE + arg[1]);
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.RED + "Debug MUST be True or False. Your input was: " + TextFormatting.WHITE + arg[1]);
+					sender.sendMessage(msg);
 					return;
 				}
 			}
@@ -221,8 +221,8 @@ public class CommandChunkPurge extends CommandBase
 					
 					ModChunkPurge.config.enabled = Boolean.valueOf(arg[1]);
 
-					msg = new ChatComponentText(EnumChatFormatting.GREEN + "Chunk Purge Enabled Set to: " + EnumChatFormatting.WHITE + String.valueOf(ModChunkPurge.config.enabled));
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.GREEN + "Chunk Purge Enabled Set to: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.enabled));
+					sender.sendMessage(msg);
 					
 					ModChunkPurge.config.saveConfig();
 					return;
@@ -231,8 +231,8 @@ public class CommandChunkPurge extends CommandBase
 				else
 				{
 
-					msg = new ChatComponentText(EnumChatFormatting.RED + "Enabled MUST be True or False. Your input was: " + EnumChatFormatting.WHITE + arg[1]);
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.RED + "Enabled MUST be True or False. Your input was: " + TextFormatting.WHITE + arg[1]);
+					sender.sendMessage(msg);
 					return;
 				}
 			}
@@ -246,8 +246,8 @@ public class CommandChunkPurge extends CommandBase
 					{
 						
 
-						msg = new ChatComponentText(EnumChatFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0");
+						sender.sendMessage(msg);
 						return;
 					}
 					
@@ -256,8 +256,8 @@ public class CommandChunkPurge extends CommandBase
 						
 						ModChunkPurge.config.pradius = Integer.valueOf(arg[1]);
 
-						msg = new ChatComponentText(EnumChatFormatting.GREEN + "Player Ignore Radius Set to: View Distance(" + MinecraftServer.getServer().getConfigurationManager().getViewDistance()+ ") + " + EnumChatFormatting.WHITE + arg[1] + EnumChatFormatting.GREEN + " Chunks");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.GREEN + "Player Ignore Radius Set to: View Distance(" + server.getPlayerList().getViewDistance()+ ") + " + TextFormatting.WHITE + arg[1] + TextFormatting.GREEN + " Chunks");
+						sender.sendMessage(msg);
 						
 						ModChunkPurge.config.saveConfig();
 						return;
@@ -268,8 +268,8 @@ public class CommandChunkPurge extends CommandBase
 				catch (NumberFormatException ex)
 				{
 
-					msg = new ChatComponentText(EnumChatFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0. " + EnumChatFormatting.RED + "Your input was: " + EnumChatFormatting.WHITE + arg[1]);
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0. " + TextFormatting.RED + "Your input was: " + TextFormatting.WHITE + arg[1]);
+					sender.sendMessage(msg);
 					
 				}
 				return;	
@@ -284,8 +284,8 @@ public class CommandChunkPurge extends CommandBase
 					{
 						
 
-						msg = new ChatComponentText(EnumChatFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0");
+						sender.sendMessage(msg);
 						return;
 					}
 					
@@ -294,8 +294,8 @@ public class CommandChunkPurge extends CommandBase
 						
 						ModChunkPurge.config.tradius = Integer.valueOf(arg[1]);
 
-						msg = new ChatComponentText(EnumChatFormatting.GREEN + "Chunk Loader Ticket Ignore Radius Set to: " + EnumChatFormatting.WHITE + arg[1] + EnumChatFormatting.GREEN + " Chunks");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.GREEN + "Chunk Loader Ticket Ignore Radius Set to: " + TextFormatting.WHITE + arg[1] + TextFormatting.GREEN + " Chunks");
+						sender.sendMessage(msg);
 						
 						ModChunkPurge.config.saveConfig();
 						return;
@@ -306,8 +306,8 @@ public class CommandChunkPurge extends CommandBase
 				catch (NumberFormatException ex)
 				{
 
-					msg = new ChatComponentText(EnumChatFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0. " + EnumChatFormatting.RED + "Your input was: " + EnumChatFormatting.WHITE + arg[1]);
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0. " + TextFormatting.RED + "Your input was: " + TextFormatting.WHITE + arg[1]);
+					sender.sendMessage(msg);
 					
 				}
 				return;	
@@ -322,8 +322,8 @@ public class CommandChunkPurge extends CommandBase
 					{
 						
 
-						msg = new ChatComponentText(EnumChatFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0");
+						sender.sendMessage(msg);
 						return;
 					}
 					
@@ -332,8 +332,8 @@ public class CommandChunkPurge extends CommandBase
 						
 						ModChunkPurge.config.sradius = Integer.valueOf(arg[1]);
 
-						msg = new ChatComponentText(EnumChatFormatting.GREEN + "Spawn Chunk Ignore Radius Set to: Spawn Radius(8) + " + EnumChatFormatting.WHITE + arg[1] + EnumChatFormatting.GREEN + " Chunks");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.GREEN + "Spawn Chunk Ignore Radius Set to: Spawn Radius(8) + " + TextFormatting.WHITE + arg[1] + TextFormatting.GREEN + " Chunks");
+						sender.sendMessage(msg);
 						
 						ModChunkPurge.config.saveConfig();
 						return;
@@ -344,8 +344,8 @@ public class CommandChunkPurge extends CommandBase
 				catch (NumberFormatException ex)
 				{
 
-					msg = new ChatComponentText(EnumChatFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0. " + EnumChatFormatting.RED + "Your input was: " + EnumChatFormatting.WHITE + arg[1]);
-					sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.RED + "[# of chunks] MUST be an integer greater than or equal to 0. " + TextFormatting.RED + "Your input was: " + TextFormatting.WHITE + arg[1]);
+					sender.sendMessage(msg);
 					
 				}
 				return;	
@@ -383,20 +383,20 @@ public class CommandChunkPurge extends CommandBase
 						if(configIDs.contains(sAR))
 						{
 							// Why are you adding things to the dimlist that are already there... why do I have to write code to catch this?
-							msg = new ChatComponentText(EnumChatFormatting.RED + "Config already contains dimension " + EnumChatFormatting.WHITE + sAR);
-							sender.addChatMessage(msg);
+							msg = new TextComponentString(TextFormatting.RED + "Config already contains dimension " + TextFormatting.WHITE + sAR);
+							sender.sendMessage(msg);
 						}
 						else
 						{
 						// Add the new input to the dimlist, reset the dimlist value, and tell the player
 						ModChunkPurge.config.dimlist = ModChunkPurge.config.dimlist + "," + iAR;
-						msg = new ChatComponentText(EnumChatFormatting.GREEN + "Dimension " + EnumChatFormatting.WHITE + sAR + EnumChatFormatting.GREEN + " added to config");
-						sender.addChatMessage(msg);
+						msg = new TextComponentString(TextFormatting.GREEN + "Dimension " + TextFormatting.WHITE + sAR + TextFormatting.GREEN + " added to config");
+						sender.sendMessage(msg);
 						}
 						
 					}
-					  msg = new ChatComponentText(EnumChatFormatting.GREEN + "ID's of dimensions now being ChunkPurged | " + EnumChatFormatting.WHITE + ModChunkPurge.config.dimlist.replace(",",", "));
-					  sender.addChatMessage(msg);
+					  msg = new TextComponentString(TextFormatting.GREEN + "ID's of dimensions now being ChunkPurged | " + TextFormatting.WHITE + ModChunkPurge.config.dimlist.replace(",",", "));
+					  sender.sendMessage(msg);
 					// SAVE your config AFTER the loop, not inside it.
 					ModChunkPurge.config.saveConfig();
 					return;
@@ -438,19 +438,19 @@ public class CommandChunkPurge extends CommandBase
 							AR = AR.replaceAll(",$", "");
 							// Set the new dimlist and tell the player they did a good job
 							ModChunkPurge.config.dimlist = AR;
-							msg = new ChatComponentText(EnumChatFormatting.GREEN + "Removed Dimension " + EnumChatFormatting.WHITE + sAR + EnumChatFormatting.GREEN + " from Dimensions being ChunkPurged");
-							sender.addChatMessage(msg);
+							msg = new TextComponentString(TextFormatting.GREEN + "Removed Dimension " + TextFormatting.WHITE + sAR + TextFormatting.GREEN + " from Dimensions being ChunkPurged");
+							sender.sendMessage(msg);
 						}
 						else
 						{
 							// Why are you trying to remove things that aren't there? Stop doing that...
-							msg = new ChatComponentText(EnumChatFormatting.RED + "Dimension " + EnumChatFormatting.WHITE + sAR + EnumChatFormatting.RED + " was not in the config");
-							sender.addChatMessage(msg);
+							msg = new TextComponentString(TextFormatting.RED + "Dimension " + TextFormatting.WHITE + sAR + TextFormatting.RED + " was not in the config");
+							sender.sendMessage(msg);
 						}
 						
 					}
-					msg = new ChatComponentText(EnumChatFormatting.GREEN + "ID's of dimensions now being ChunkPurged | " + EnumChatFormatting.WHITE + ModChunkPurge.config.dimlist.replace(",",", "));
-					  sender.addChatMessage(msg);
+					msg = new TextComponentString(TextFormatting.GREEN + "ID's of dimensions now being ChunkPurged | " + TextFormatting.WHITE + ModChunkPurge.config.dimlist.replace(",",", "));
+					  sender.sendMessage(msg);
 					// SAVE your config AFTER the loop, not inside it.
 					ModChunkPurge.config.saveConfig();
 					return;

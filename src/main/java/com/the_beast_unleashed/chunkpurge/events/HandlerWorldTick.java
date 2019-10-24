@@ -35,7 +35,7 @@ public class HandlerWorldTick
 	if(ModChunkPurge.config.enabled)
 	{
 		// Check which dimension is ticking
-		id = event.world.provider.getDimensionId();
+		id = event.world.provider.getDimension();
 		// Has this dimension ticked before during this server session?
 		if(dim.contains(id))
 		// This is NOT the first tick of a new dimension
