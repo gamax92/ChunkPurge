@@ -256,10 +256,10 @@ public class WorldChunkUnloader
 		
 		if (ModChunkPurge.config.debug)
 		{
-			ModChunkPurge.log.log(Level.INFO, "Queued " + String.valueOf(chunksToUnload.size())
+			ModChunkPurge.log.log(Level.INFO, "Queued " + chunksToUnload.size()
 					+ " chunks for unload in " + this.world.provider.getDimensionType().getName()
-					+ " (" + String.valueOf(this.world.provider.getDimension())
-					+ ") in " + String.valueOf(MinecraftServer.getCurrentTimeMillis() - this.initialTime)
+					+ " (" + this.world.provider.getDimension()
+					+ ") in " + (MinecraftServer.getCurrentTimeMillis() - this.initialTime)
 					+ " milliseconds.");
 		}
 		

@@ -91,7 +91,7 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("delay"))
 			{
 
-				msg = new TextComponentString(TextFormatting.GREEN + "Unload Delay: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.chunkUnloadDelay));
+				msg = new TextComponentString(TextFormatting.GREEN + "Unload Delay: " + TextFormatting.WHITE + ModChunkPurge.config.chunkUnloadDelay);
 				sender.sendMessage(msg);
 				return;
 			}
@@ -99,7 +99,7 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("debug"))
 			{
 
-				msg = new TextComponentString(TextFormatting.GREEN + "Debug Mode Enabled: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.debug));
+				msg = new TextComponentString(TextFormatting.GREEN + "Debug Mode Enabled: " + TextFormatting.WHITE + ModChunkPurge.config.debug);
 				sender.sendMessage(msg);
 				return;
 			}
@@ -107,7 +107,7 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("enable"))
 			{
 
-				msg = new TextComponentString(TextFormatting.GREEN + "Chunk Purge Enabled: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.enabled));
+				msg = new TextComponentString(TextFormatting.GREEN + "Chunk Purge Enabled: " + TextFormatting.WHITE + ModChunkPurge.config.enabled);
 				sender.sendMessage(msg);
 				return;
 			}
@@ -115,7 +115,7 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("pradius"))
 			{
 
-				msg = new TextComponentString(TextFormatting.GREEN + "Player Ignore Radius = View Distance(" + server.getPlayerList().getViewDistance()+ ") + " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.pradius) + TextFormatting.GREEN + " Chunks");
+				msg = new TextComponentString(TextFormatting.GREEN + "Player Ignore Radius = View Distance(" + server.getPlayerList().getViewDistance()+ ") + " + TextFormatting.WHITE + ModChunkPurge.config.pradius + TextFormatting.GREEN + " Chunks");
 				sender.sendMessage(msg);
 				return;
 			}
@@ -123,7 +123,7 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("tradius"))
 			{
 
-				msg = new TextComponentString(TextFormatting.GREEN + "Chunk Loader Ticket Ignore Radius = " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.tradius) + TextFormatting.GREEN + " Chunks");
+				msg = new TextComponentString(TextFormatting.GREEN + "Chunk Loader Ticket Ignore Radius = " + TextFormatting.WHITE + ModChunkPurge.config.tradius + TextFormatting.GREEN + " Chunks");
 				sender.sendMessage(msg);
 				return;
 			}
@@ -131,7 +131,7 @@ public class CommandChunkPurge extends CommandBase
 		  if (arg[0].equalsIgnoreCase("sradius"))
 			{
 
-				msg = new TextComponentString(TextFormatting.GREEN + "Spawn Chunk Ignore Radius = Spawn Radius(8) + " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.sradius) + TextFormatting.GREEN + " Chunks");
+				msg = new TextComponentString(TextFormatting.GREEN + "Spawn Chunk Ignore Radius = Spawn Radius(8) + " + TextFormatting.WHITE + ModChunkPurge.config.sradius + TextFormatting.GREEN + " Chunks");
 				sender.sendMessage(msg);
 				return;
 			}
@@ -197,7 +197,7 @@ public class CommandChunkPurge extends CommandBase
 					
 					ModChunkPurge.config.debug = Boolean.valueOf(arg[1]);
 
-					msg = new TextComponentString(TextFormatting.GREEN + "Debug Mode Enabled Set to: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.debug));
+					msg = new TextComponentString(TextFormatting.GREEN + "Debug Mode Enabled Set to: " + TextFormatting.WHITE + ModChunkPurge.config.debug);
 					sender.sendMessage(msg);
 					
 					ModChunkPurge.config.saveConfig();
@@ -221,7 +221,7 @@ public class CommandChunkPurge extends CommandBase
 					
 					ModChunkPurge.config.enabled = Boolean.valueOf(arg[1]);
 
-					msg = new TextComponentString(TextFormatting.GREEN + "Chunk Purge Enabled Set to: " + TextFormatting.WHITE + String.valueOf(ModChunkPurge.config.enabled));
+					msg = new TextComponentString(TextFormatting.GREEN + "Chunk Purge Enabled Set to: " + TextFormatting.WHITE + ModChunkPurge.config.enabled);
 					sender.sendMessage(msg);
 					
 					ModChunkPurge.config.saveConfig();
