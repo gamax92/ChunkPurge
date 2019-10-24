@@ -2,6 +2,7 @@ package com.the_beast_unleashed.chunkpurge;
 
 import com.the_beast_unleashed.chunkpurge.operators.HandlerConfig;
 import com.the_beast_unleashed.chunkpurge.proxy.ProxyCommon;
+import org.apache.logging.log4j.Logger;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -25,7 +26,7 @@ public class ModChunkPurge
 	public static ModChunkPurge instance;
 
 	public static HandlerConfig config;
-	public static org.apache.logging.log4j.Logger log;
+	public static Logger log;
 
 	@SidedProxy(clientSide = "com.the_beast_unleashed.chunkpurge.proxy.ProxyClient", serverSide = "com.the_beast_unleashed.chunkpurge.proxy.ProxyCommon")
 	public static ProxyCommon proxy;
