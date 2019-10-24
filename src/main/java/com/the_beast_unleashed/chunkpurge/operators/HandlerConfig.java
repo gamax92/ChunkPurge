@@ -49,21 +49,21 @@ public class HandlerConfig
 		
 		debug = properties.debug.getBoolean(false);
 		
-		properties.pradius = config.get(Configuration.CATEGORY_GENERAL, "praduius", 4,
+		properties.pradius = config.get(Configuration.CATEGORY_GENERAL, "pradius", 4,
 				"The number of chunks around a player outside of player view range to ignore while unloading chunks."
 				+ "\nChange in game with /chunkpurge pradius <# of chunks>"
 				+ "\nDefault: 4");
 		
 		pradius = properties.pradius.getInt(5);
 		
-		properties.tradius = config.get(Configuration.CATEGORY_GENERAL, "traduius", 5,
+		properties.tradius = config.get(Configuration.CATEGORY_GENERAL, "tradius", 5,
 				"The number of chunks around a forced chunk ticket to ignore while unloading chunks."
 				+ "\nChange in game with /chunkpurge tradius <# of chunks>"
 				+ "\nDefault: 5");
 		
 		tradius = properties.tradius.getInt(3);
 		
-		properties.sradius = config.get(Configuration.CATEGORY_GENERAL, "sraduius", 3,
+		properties.sradius = config.get(Configuration.CATEGORY_GENERAL, "sradius", 3,
 				"The number of chunks around the spawn chunks to ignore while unloading chunks."
 				+ "\nChange in game with /chunkpurge tradius <# of chunks>"
 				+ "\nDefault: 3");
